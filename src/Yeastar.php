@@ -88,7 +88,7 @@ class Yeastar
      */
     private function manageToken(): string
     {
-        $systemToken = (new YeastarToken())->first();
+        $systemToken = (new YeastarToken())->all()->first();
         if (!$systemToken){
             return $this->getToken();
         }
@@ -151,7 +151,7 @@ class Yeastar
             // If refreshing the token fails, fall back to getting a new token
             return $this->getToken();
         }
-        $systemToken = (new YeastarToken())->first();
+        $systemToken = (new YeastarToken())->all()->first();
         $systemToken->updateOrCreate([
             'access_token' => $response->access_token,
             'access_token_expire_time' => Carbon::now()->addSeconds($response->access_token_expire_time),
