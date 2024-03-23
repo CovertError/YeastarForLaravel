@@ -55,7 +55,6 @@ body:
         multiple: true
         options:
         - macOS
-        - Windows
         - Linux
     - type: textarea
       id: notes
