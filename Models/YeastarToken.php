@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
  * @property string $refresh_token
  * @property Carbon|null $refresh_token_expire_time
  * @property string $token
+ *
  * @mixin Builder
  */
 class YeastarToken extends Model
@@ -24,5 +25,4 @@ class YeastarToken extends Model
         'refresh_token',
         'refresh_token_expire_time',
     ];
-
 }

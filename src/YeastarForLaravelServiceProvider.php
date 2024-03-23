@@ -4,7 +4,6 @@ namespace Coverterror\YeastarForLaravel;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Coverterror\YeastarForLaravel\Commands\YeastarForLaravelCommand;
 
 class YeastarForLaravelServiceProvider extends PackageServiceProvider
 {

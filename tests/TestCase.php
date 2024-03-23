@@ -2,9 +2,9 @@
 
 namespace Coverterror\YeastarForLaravel\Tests;
 
+use Coverterror\YeastarForLaravel\YeastarForLaravelServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Coverterror\YeastarForLaravel\YeastarForLaravelServiceProvider;
 
 class TestCase extends Orchestra
 {
