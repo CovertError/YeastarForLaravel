@@ -42,6 +42,7 @@
     "autoload-dev": {
         "psr-4": {
             "Coverterror\\YeastarForLaravel\\Tests\\": "tests/",
+            "Coverterror\\YeastarForLaravel\\Database\\Factories\\": "database/factories/",
             "Workbench\\App\\": "workbench/app/"
         }
     },

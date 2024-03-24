@@ -85,23 +85,23 @@ class Yeastar
     /**
      * Manages the access token for API requests, obtaining a new token if necessary.
      *
-     * @return string The access token for API requests.
+     * @return YeastarToken The access token for API requests.
      */
-    private function manageToken(): string
+    private function manageToken(): YeastarToken
     {
         $systemToken = (new YeastarToken())->all()->first();
         if (! $systemToken) {
-            return $this->getToken();
+            return $this->getNewToken();
         }
 
         if (Carbon::now()->greaterThan($systemToken->access_token_expire_time)) {
             if (Carbon::now()->lessThan($systemToken->refresh_token_expire_time)) {
                 return $this->refreshToken($systemToken->refresh_token);
             } else {
-                return $this->getToken();
+                return $this->getNewToken();
             }
         } else {
-            return $systemToken->token;
+            return $systemToken;
         }
 
     }
@@ -109,9 +109,8 @@ class Yeastar
     /**
      * Retrieves a new access token from the Yeastar API.
      *
-     * @return string The new access token.
      */
-    private function getToken(): string
+    private function getNewToken()
     {
         $response = $this->makePostRequest([
             'path' => 'get_token',
@@ -123,23 +122,45 @@ class Yeastar
         ]);
 
         $response = json_decode($response['data']);
-        (new YeastarToken())->updateOrCreate([
+        return YeastarToken::updateOrCreate([
             'token' => $response->access_token,
             'access_token_expire_time' => Carbon::now()->addSeconds($response->access_token_expire_time),
             'refresh_token' => $response->refresh_token,
             'refresh_token_expire_time' => Carbon::now()->addSeconds($response->refresh_token_expire_time),
         ]);
+    }
 
-        return $response->access_token;
+    /**
+     * Retrieves the access token for API requests.
+     */
+    public function getToken(): string
+    {
+        return $this->manageToken()->access_token;
+    }
+
+    /**
+     * Retrieves the refresh token for API requests.
+     */
+    public function getRefreshToken(): string
+    {
+        return $this->manageToken()->refresh_token;
+    }
+
+    /**
+     * Retrieves the access token for API requests.
+     */
+    public function getYeastarToken(): YeastarToken
+    {
+        return $this->manageToken();
     }
 
     /**
      * Refreshes the access token using the refresh token.
      *
-     * @param  string  $refreshToken  The refresh token.
-     * @return string The new access token.
+     * @param string $refreshToken The refresh token.
+     * @return YeastarToken The new access token.
      */
-    private function refreshToken(string $refreshToken): string
+    private function refreshToken(string $refreshToken): YeastarToken
     {
         $response = $this->makePostRequest([
             'path' => 'refresh_token',
@@ -152,7 +173,7 @@ class Yeastar
         $response = json_decode($response['data']);
         if (isset($response->errcode) && $response->errcode !== 0) {
             // If refreshing the token fails, fall back to getting a new token
-            return $this->getToken();
+            return $this->getNewToken();
         }
         $systemToken = (new YeastarToken())->all()->first();
         $systemToken->updateOrCreate([
@@ -162,7 +183,7 @@ class Yeastar
             'refresh_token_expire_time' => Carbon::now()->addSeconds($response->refresh_token_expire_time),
         ]);
 
-        return $response->access_token;
+        return $systemToken;
     }
 
     /**
