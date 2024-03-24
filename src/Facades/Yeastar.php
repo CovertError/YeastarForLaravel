@@ -7,13 +7,8 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \Coverterror\YeastarForLaravel\Yeastar
- */
-/**
- * @property string $access_token
- * @property Carbon|null $access_token_expire_time
- * @property string $refresh_token
- * @property Carbon|null $refresh_token_expire_time
- * @property string $token
+ * @method static mixed makeCall(string $caller, string $callee, bool $returnOnlyStatus = true)
+ * /
  */
 class Yeastar extends Facade
 {
